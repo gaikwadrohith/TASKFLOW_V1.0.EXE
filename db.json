@@ -1,0 +1,12 @@
+{
+  "users": [
+    {
+      "id": "b7eb",
+      "name": "devid",
+      "email": "devid123@gmail.com",
+      "password": "dev@123"
+    }
+  ],
+  "tasks": [],
+  "$schema": "./node_modules/json-server/schema.json"
+}
