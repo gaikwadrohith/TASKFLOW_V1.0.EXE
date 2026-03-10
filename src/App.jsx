@@ -2,8 +2,8 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useState } from "react";
 import Home from "./pages/home";
 import Dashboard from "./pages/dashboard";
-import Login from "./components/auth/login";
-import Register from "./components/auth/register";
+import Login from "./components/auth/Login"
+import Register from "./components/auth/Register"
 import Tasks from "./pages/Tasks";
 import Settings from "./pages/Settings";
 import About from "./pages/About";
