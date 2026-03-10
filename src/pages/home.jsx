@@ -89,21 +89,7 @@ export default function Home() {
               <FaArrowRight className="text-xs group-hover:translate-x-1 transition-transform" />
             </Link>
           </Motion.div>
-        </div>
-
-        {/* Status Bar */}
-        <div
-          className="border-2 border-t-0 px-4 py-1.5 flex justify-between"
-          style={{ background: "var(--black)", borderColor: "var(--black)" }}
-        >
-          <span className="text-xs tracking-widest" style={{ color: "var(--pink)" }}>
-            SYS.READY
-          </span>
-          <span className="text-xs tracking-widest" style={{ color: "var(--gray)" }}>
-            © {new Date().getFullYear()} TASKFLOW_SYSTEMS
-          </span>
-        </div>
-      </Motion.div>
+        </div></Motion.div>
     </div>
   );
 }
