@@ -48,6 +48,21 @@ export default function Login({ setAuth }) {
     }),
     onSubmit: async (values) => {
       try {
+        // Hardcoded demo account — always works even if db resets
+        if (values.email === "devid123@gmail.com" && values.password === "dev@123") {
+          const demoUser = { id: "dummy-user-001", name: "DEV USER", email: "devid123@gmail.com" };
+          localStorage.setItem("user", JSON.stringify(demoUser));
+          localStorage.setItem("auth", "true");
+          if (remember) {
+            localStorage.setItem("remembered_email", values.email);
+          } else {
+            localStorage.removeItem("remembered_email");
+          }
+          if (setAuth) setAuth(true);
+          navigate("/dashboard");
+          return;
+        }
+
         const response = await api.get("/users");
         const user = response.data.find((u) => u.email === values.email && u.password === values.password);
         if (user) {
@@ -93,6 +108,7 @@ export default function Login({ setAuth }) {
   };
 
   const strength = getStrength(formik.values.password);
+  const isDemoUser = formik.values.email === "devid123@gmail.com";
 
   return (
     <AuthLayout title="LOGIN">
@@ -170,11 +186,11 @@ export default function Login({ setAuth }) {
         <button
           type="button"
           onClick={formik.handleSubmit}
-          disabled={formik.isSubmitting || serverStatus === "waking"}
+          disabled={formik.isSubmitting || (serverStatus === "waking" && !isDemoUser)}
           className="w-full flex items-center justify-between border-2 border-black px-5 py-3 font-bold text-sm tracking-widest hover:bg-black hover:text-white transition-all group disabled:opacity-50 disabled:cursor-not-allowed"
           style={{ background: "var(--pink)" }}
         >
-          <span>{formik.isSubmitting ? "AUTHENTICATING..." : serverStatus === "waking" ? "WAITING_FOR_SERVER..." : "SIGN_IN"}</span>
+          <span>{formik.isSubmitting ? "AUTHENTICATING..." : serverStatus === "waking" && !isDemoUser ? "WAITING_FOR_SERVER..." : "SIGN_IN"}</span>
           <FaArrowRight className="text-xs group-hover:translate-x-1 transition-transform" />
         </button>
 

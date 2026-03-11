@@ -1,4 +1,11 @@
 {
-  "users": [],
+  "users": [
+    {
+      "id": "dummy-user-001",
+      "name": "DEV USER",
+      "email": "devid123@gmail.com",
+      "password": "dev@123"
+    }
+  ],
   "tasks": []
 }
