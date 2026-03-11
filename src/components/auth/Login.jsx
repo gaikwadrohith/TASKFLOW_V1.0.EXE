@@ -5,7 +5,7 @@ import { motion as Motion } from "framer-motion";
 import AuthLayout from "./AuthLayout";
 import api from "../../services/api";
 import { FaAt, FaLock, FaArrowRight, FaEye, FaEyeSlash, FaShieldAlt } from "react-icons/fa";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function Field({ name, type, placeholder, icon, formik, toggleShow, showPassword }) {
   return (
@@ -38,6 +38,7 @@ export default function Login({ setAuth }) {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [remember, setRemember] = useState(false);
+  const [serverStatus, setServerStatus] = useState("waking");
 
   const formik = useFormik({
     initialValues: { email: "", password: "" },
@@ -63,17 +64,24 @@ export default function Login({ setAuth }) {
           alert("INVALID CREDENTIALS");
         }
       } catch {
-        alert("CONNECTION ERROR — IS SERVER RUNNING?");
+        alert("SERVER_UNAVAILABLE — TRY AGAIN IN 30 SECONDS");
       }
     },
   });
 
-  useState(() => {
+  useEffect(() => {
     const remembered = localStorage.getItem("remembered_email");
     if (remembered) {
-      formik.setFieldValue("email", remembered);
-      setRemember(true);
+      setTimeout(() => {
+        formik.setFieldValue("email", remembered);
+        setRemember(true);
+      }, 0);
     }
+
+    api
+      .get("/users")
+      .then(() => setServerStatus("ready"))
+      .catch(() => setServerStatus("error"));
   }, []);
 
   const getStrength = (pwd) => {
@@ -89,10 +97,36 @@ export default function Login({ setAuth }) {
   return (
     <AuthLayout title="LOGIN">
       <Motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-        <div className="flex items-center gap-2 border-2 border-black px-3 py-2 mb-5" style={{ background: "#f0fdf4" }}>
+        {/* Security badge */}
+        <div className="flex items-center gap-2 border-2 border-black px-3 py-2 mb-3" style={{ background: "#f0fdf4" }}>
           <FaShieldAlt className="text-green-600 text-xs" />
           <span className="text-xs tracking-widest text-green-700 font-bold">SECURE_CONNECTION_ACTIVE</span>
           <span className="ml-auto w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+        </div>
+
+        {/* Server status */}
+        <div
+          className="flex items-center gap-2 border-2 border-black px-3 py-2 mb-5"
+          style={{
+            background: serverStatus === "ready" ? "#f0fdf4" : serverStatus === "error" ? "#fef2f2" : "#fefce8",
+          }}
+        >
+          <span
+            className="w-2 h-2 rounded-full flex-shrink-0 animate-pulse"
+            style={{
+              background: serverStatus === "ready" ? "#16a34a" : serverStatus === "error" ? "#dc2626" : "#ca8a04",
+            }}
+          />
+          <span
+            className="text-xs tracking-widest font-bold"
+            style={{
+              color: serverStatus === "ready" ? "#16a34a" : serverStatus === "error" ? "#dc2626" : "#ca8a04",
+            }}
+          >
+            {serverStatus === "ready" && "SERVER_ONLINE — READY TO LOGIN"}
+            {serverStatus === "waking" && "SERVER_WAKING_UP — PLEASE WAIT..."}
+            {serverStatus === "error" && "SERVER_OFFLINE — RETRY IN 30s"}
+          </span>
         </div>
 
         <Field name="email" type="email" placeholder="name@example.com" icon={<FaAt />} formik={formik} />
@@ -136,11 +170,11 @@ export default function Login({ setAuth }) {
         <button
           type="button"
           onClick={formik.handleSubmit}
-          disabled={formik.isSubmitting}
-          className="w-full flex items-center justify-between border-2 border-black px-5 py-3 font-bold text-sm tracking-widest hover:bg-black hover:text-white transition-all group"
+          disabled={formik.isSubmitting || serverStatus === "waking"}
+          className="w-full flex items-center justify-between border-2 border-black px-5 py-3 font-bold text-sm tracking-widest hover:bg-black hover:text-white transition-all group disabled:opacity-50 disabled:cursor-not-allowed"
           style={{ background: "var(--pink)" }}
         >
-          <span>{formik.isSubmitting ? "AUTHENTICATING..." : "SIGN_IN"}</span>
+          <span>{formik.isSubmitting ? "AUTHENTICATING..." : serverStatus === "waking" ? "WAITING_FOR_SERVER..." : "SIGN_IN"}</span>
           <FaArrowRight className="text-xs group-hover:translate-x-1 transition-transform" />
         </button>
 
