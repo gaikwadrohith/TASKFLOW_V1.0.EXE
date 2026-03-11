@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { deleteTask, toggleTask, clearCompleted, setFilter } from "../features/tasks/taskSlice";
 import Header from "../components/layout/Header";
 import { motion as Motion, AnimatePresence } from "framer-motion";
-import { FaTrash, FaCheck, FaFire, FaClock, FaListUl, FaCheckCircle, FaSearch, FaBroom } from "react-icons/fa";
+import { FaTrash, FaCheck, FaFire, FaClock, FaListUl, FaCheckCircle, FaSearch, FaBroom, FaRocket } from "react-icons/fa";
 
 // Decorative left panel — unique to Tasks page
 function TasksSidePanel() {
@@ -13,15 +13,12 @@ function TasksSidePanel() {
     p,
     n: tasks.filter((t) => t.priority === p && !t.completed).length,
   }));
-  const labels = ["MON","TUE","WED","THU","FRI","SAT","SUN"];
+  const labels = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
   return (
     <>
       {/* LEFT PANEL */}
-      <div
-        className="hidden xl:flex flex-col gap-4 w-44 flex-shrink-0 pt-10"
-        style={{ fontFamily: "var(--font)" }}
-      >
+      <div className="hidden xl:flex flex-col gap-4 w-44 flex-shrink-0 pt-10" style={{ fontFamily: "var(--font)" }}>
         {/* Priority meter */}
         <div className="border-2 border-black overflow-hidden" style={{ background: "var(--white)" }}>
           <div className="px-3 py-1.5 border-b-2 border-black text-xs font-bold tracking-widest" style={{ background: "var(--pink)" }}>
@@ -33,8 +30,12 @@ function TasksSidePanel() {
               return (
                 <div key={p}>
                   <div className="flex justify-between mb-1">
-                    <span className="text-xs tracking-widest uppercase" style={{ color: colors[p], fontSize: "0.6rem" }}>{p}</span>
-                    <span className="text-xs font-bold" style={{ color: colors[p] }}>{n}</span>
+                    <span className="text-xs tracking-widest uppercase" style={{ color: colors[p], fontSize: "0.6rem" }}>
+                      {p}
+                    </span>
+                    <span className="text-xs font-bold" style={{ color: colors[p] }}>
+                      {n}
+                    </span>
                   </div>
                   <div className="w-full h-1.5 border border-black" style={{ background: "#f0f0f0" }}>
                     <div className="h-full" style={{ width: `${Math.min(n * 20, 100)}%`, background: colors[p] }} />
@@ -56,7 +57,9 @@ function TasksSidePanel() {
               const isToday = i === (today === 0 ? 6 : today - 1);
               return (
                 <div key={d} className="flex flex-col items-center gap-0.5">
-                  <span className="text-xs" style={{ fontSize: "0.45rem", color: "var(--gray)" }}>{d}</span>
+                  <span className="text-xs" style={{ fontSize: "0.45rem", color: "var(--gray)" }}>
+                    {d}
+                  </span>
                   <div
                     className="w-4 h-4 border border-black flex items-center justify-center"
                     style={{
@@ -76,21 +79,20 @@ function TasksSidePanel() {
         {/* Decorative ASCII */}
         <div className="border-2 border-black p-3" style={{ background: "var(--white)" }}>
           <pre className="text-xs leading-tight" style={{ color: "var(--pink-dark)", fontSize: "0.5rem" }}>
-{`┌─────────┐
+            {`┌─────────┐
 │ TASK    │
 │ MANAGER │
 │ v1.0    │
 └─────────┘`}
           </pre>
-          <p className="text-xs tracking-widest mt-2" style={{ color: "var(--gray)", fontSize: "0.5rem" }}>SYS_STATUS: OK</p>
+          <p className="text-xs tracking-widest mt-2" style={{ color: "var(--gray)", fontSize: "0.5rem" }}>
+            SYS_STATUS: OK
+          </p>
         </div>
       </div>
 
       {/* RIGHT PANEL */}
-      <div
-        className="hidden xl:flex flex-col gap-4 w-44 flex-shrink-0 pt-10"
-        style={{ fontFamily: "var(--font)" }}
-      >
+      <div className="hidden xl:flex flex-col gap-4 w-44 flex-shrink-0 pt-10" style={{ fontFamily: "var(--font)" }}>
         {/* Quick tips */}
         <div className="border-2 border-black overflow-hidden" style={{ background: "var(--white)" }}>
           <div className="px-3 py-1.5 border-b-2 border-black text-xs font-bold tracking-widest" style={{ background: "var(--pink)" }}>
@@ -104,13 +106,12 @@ function TasksSidePanel() {
               ["FILTER", "SORT LIST"],
             ].map(([key, val]) => (
               <div key={key} className="flex items-center justify-between">
-                <span
-                  className="border border-black px-1.5 py-0.5 text-xs font-bold"
-                  style={{ background: "var(--pink-light)", fontSize: "0.55rem" }}
-                >
+                <span className="border border-black px-1.5 py-0.5 text-xs font-bold" style={{ background: "var(--pink-light)", fontSize: "0.55rem" }}>
                   {key}
                 </span>
-                <span className="text-xs" style={{ color: "var(--gray)", fontSize: "0.55rem" }}>{val}</span>
+                <span className="text-xs" style={{ color: "var(--gray)", fontSize: "0.55rem" }}>
+                  {val}
+                </span>
               </div>
             ))}
           </div>
@@ -122,12 +123,7 @@ function TasksSidePanel() {
             MOTIVATION.LOG
           </div>
           <div className="p-3">
-            {[
-              "SHIP IT.",
-              "STAY FOCUSED.",
-              "DONE &gt; PERFECT.",
-              "GRIND MODE.",
-            ].map((line, i) => (
+            {["SHIP IT.", "STAY FOCUSED.", "DONE > PERFECT.", "GRIND MODE."].map((line, i) => (
               <Motion.p
                 key={line}
                 initial={{ opacity: 0 }}
@@ -146,11 +142,7 @@ function TasksSidePanel() {
         <div className="border-2 border-black p-3" style={{ background: "var(--white)" }}>
           <div className="grid grid-cols-4 gap-1">
             {Array.from({ length: 16 }).map((_, i) => (
-              <div
-                key={i}
-                className="aspect-square border border-black"
-                style={{ background: i % 3 === 0 ? "var(--pink)" : i % 5 === 0 ? "var(--black)" : "transparent" }}
-              />
+              <div key={i} className="aspect-square border border-black" style={{ background: i % 3 === 0 ? "var(--pink)" : i % 5 === 0 ? "var(--black)" : "transparent" }} />
             ))}
           </div>
           <p className="text-xs tracking-widest mt-2 text-center" style={{ color: "var(--gray)", fontSize: "0.5rem" }}>
@@ -168,9 +160,9 @@ export default function Tasks({ setAuth }) {
   const [search, setSearch] = useState("");
 
   const priorityConfig = {
-    low:    { bg: "#f0fdf4", color: "#16a34a", border: "#bbf7d0", label: "LOW" },
+    low: { bg: "#f0fdf4", color: "#16a34a", border: "#bbf7d0", label: "LOW" },
     medium: { bg: "#fefce8", color: "#ca8a04", border: "#fde68a", label: "MED" },
-    high:   { bg: "#fef2f2", color: "#dc2626", border: "#fecaca", label: "HIGH" },
+    high: { bg: "#fef2f2", color: "#dc2626", border: "#fecaca", label: "HIGH" },
   };
 
   const filteredTasks = tasks
@@ -187,50 +179,36 @@ export default function Tasks({ setAuth }) {
   const high = tasks.filter((t) => t.priority === "high" && !t.completed).length;
 
   const stats = [
-    { icon: <FaListUl />,      label: "TOTAL",     value: total,     accent: "var(--black)", bg: "var(--white)" },
-    { icon: <FaClock />,       label: "REMAINING", value: remaining, accent: "#6366f1",      bg: "#eef2ff" },
-    { icon: <FaCheckCircle />, label: "DONE",      value: completed, accent: "#16a34a",      bg: "#f0fdf4" },
-    { icon: <FaFire />,        label: "URGENT",    value: high,      accent: "#dc2626",      bg: "#fef2f2" },
+    { icon: <FaListUl />, label: "TOTAL", value: total, accent: "var(--black)", bg: "var(--white)" },
+    { icon: <FaClock />, label: "REMAINING", value: remaining, accent: "#6366f1", bg: "#eef2ff" },
+    { icon: <FaCheckCircle />, label: "DONE", value: completed, accent: "#16a34a", bg: "#f0fdf4" },
+    { icon: <FaFire />, label: "URGENT", value: high, accent: "#dc2626", bg: "#fef2f2" },
   ];
 
   const filters = [
-    { key: "all",       label: "ALL" },
-    { key: "active",    label: "ACTIVE" },
+    { key: "all", label: "ALL" },
+    { key: "active", label: "ACTIVE" },
     { key: "completed", label: "DONE" },
   ];
 
   return (
-    // ✅ FIX 1: removed hardcoded bg-gray-100, now uses CSS var so theme works
     <div className="min-h-screen flex flex-col" style={{ fontFamily: "var(--font)" }}>
       <Header setAuth={setAuth} />
 
-      {/* ✅ FIX 2: three-column layout fills the side gaps with decorative panels */}
       <div className="flex-1 flex gap-6 w-full max-w-7xl mx-auto px-6 pb-16">
-
         <TasksSidePanel />
 
-        {/* ── Main Content ── */}
+        {/* Main Content */}
         <div className="flex-1 mt-10 min-w-0">
-
           {/* Page Title */}
-          <Motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="mb-10"
-          >
-            <p className="text-xs tracking-widest text-gray-400 uppercase mb-1" style={{ fontFamily: "var(--font)" }}>
-              // TASKFLOW / ALL TASKS
-            </p>
-            <h1
-              className="text-5xl font-black tracking-tight leading-none"
-              style={{ letterSpacing: "-0.03em", color: "var(--black)" }}
-            >
+          <Motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.4 }} className="mb-10">
+            <p className="text-xs tracking-widest text-gray-400 uppercase mb-1">// TASKFLOW / ALL TASKS</p>
+            <h1 className="text-5xl font-black tracking-tight leading-none" style={{ letterSpacing: "-0.03em", color: "var(--black)" }}>
               ALL_TASKS
             </h1>
             <div className="flex items-center gap-2 mt-3">
               <div className="h-px flex-1" style={{ background: "var(--black)" }} />
-              <span className="text-xs tracking-widest" style={{ color: "var(--gray)", fontFamily: "var(--font)" }}>
+              <span className="text-xs tracking-widest" style={{ color: "var(--gray)" }}>
                 {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" }).toUpperCase()}
               </span>
             </div>
@@ -247,16 +225,13 @@ export default function Tasks({ setAuth }) {
                 className="border-2 border-black p-4 flex flex-col gap-3 relative overflow-hidden"
                 style={{ background: stat.bg }}
               >
-                <div
-                  className="w-8 h-8 flex items-center justify-center border-2"
-                  style={{ borderColor: stat.accent, color: stat.accent, fontSize: "0.85rem" }}
-                >
+                <div className="w-8 h-8 flex items-center justify-center border-2" style={{ borderColor: stat.accent, color: stat.accent, fontSize: "0.85rem" }}>
                   {stat.icon}
                 </div>
                 <p className="text-4xl font-black leading-none" style={{ color: stat.accent, letterSpacing: "-0.04em" }}>
                   {stat.value}
                 </p>
-                <p className="text-xs tracking-widest" style={{ color: "var(--gray)", fontFamily: "var(--font)" }}>
+                <p className="text-xs tracking-widest" style={{ color: "var(--gray)" }}>
                   {stat.label}
                 </p>
                 <div className="absolute bottom-0 right-0 w-8 h-8 opacity-10" style={{ background: stat.accent }} />
@@ -266,18 +241,12 @@ export default function Tasks({ setAuth }) {
 
           {/* Progress Bar */}
           {total > 0 && (
-            <Motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-              className="mb-8 border-2 border-black p-4"
-              style={{ background: "var(--white)" }}
-            >
+            <Motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="mb-8 border-2 border-black p-4" style={{ background: "var(--white)" }}>
               <div className="flex justify-between items-center mb-2">
-                <span className="text-xs tracking-widest" style={{ color: "var(--gray)", fontFamily: "var(--font)" }}>
+                <span className="text-xs tracking-widest" style={{ color: "var(--gray)" }}>
                   PROGRESS
                 </span>
-                <span className="text-xs font-bold tracking-widest" style={{ color: "var(--black)", fontFamily: "var(--font)" }}>
+                <span className="text-xs font-bold tracking-widest" style={{ color: "var(--black)" }}>
                   {Math.round((completed / total) * 100)}%
                 </span>
               </div>
@@ -311,23 +280,14 @@ export default function Tasks({ setAuth }) {
               style={{ fontFamily: "var(--font)", letterSpacing: "0.05em", color: "var(--black)" }}
             />
             {search && (
-              <button
-                onClick={() => setSearch("")}
-                className="text-xs font-bold transition hover:opacity-60"
-                style={{ color: "var(--gray)" }}
-              >
+              <button onClick={() => setSearch("")} className="text-xs font-bold transition hover:opacity-60" style={{ color: "var(--gray)" }}>
                 ✕
               </button>
             )}
           </Motion.div>
 
           {/* Filter + Clear Row */}
-          <Motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.25 }}
-            className="flex items-center gap-2 mb-6 flex-wrap"
-          >
+          <Motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.25 }} className="flex items-center gap-2 mb-6 flex-wrap">
             {filters.map((f) => (
               <button
                 key={f.key}
@@ -354,23 +314,15 @@ export default function Tasks({ setAuth }) {
           </Motion.div>
 
           {/* Section Label */}
-          <p
-            className="text-xs tracking-widest uppercase mb-3"
-            style={{ color: "var(--gray)", fontFamily: "var(--font)" }}
-          >
+          <p className="text-xs tracking-widest uppercase mb-3" style={{ color: "var(--gray)" }}>
             — {filteredTasks.length} TASK{filteredTasks.length !== 1 ? "S" : ""} FOUND
           </p>
 
           {/* Task List */}
           {filteredTasks.length === 0 ? (
-            <Motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="border-2 border-black p-16 text-center"
-              style={{ background: "var(--white)" }}
-            >
-              <FaRocket style={{ fontSize: "2.5rem", color: "var(--pink)", marginBottom: "1rem" }} />
-              <p className="text-xs tracking-widest" style={{ color: "var(--gray)", fontFamily: "var(--font)" }}>
+            <Motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="border-2 border-black p-16 text-center" style={{ background: "var(--white)" }}>
+              <FaRocket style={{ fontSize: "2.5rem", color: "var(--pink)", marginBottom: "1rem", margin: "0 auto 1rem" }} />
+              <p className="text-xs tracking-widest" style={{ color: "var(--gray)" }}>
                 NO_TASKS_FOUND
               </p>
             </Motion.div>
@@ -406,10 +358,7 @@ export default function Tasks({ setAuth }) {
                       </button>
 
                       {/* Task Number */}
-                      <span
-                        className="text-xs flex-shrink-0"
-                        style={{ color: "var(--gray)", fontFamily: "var(--font)" }}
-                      >
+                      <span className="text-xs flex-shrink-0" style={{ color: "var(--gray)" }}>
                         {String(i + 1).padStart(2, "0")}
                       </span>
 
@@ -438,9 +387,7 @@ export default function Tasks({ setAuth }) {
                             letterSpacing: "0.1em",
                           }}
                         >
-                          {task.priority === "high" && (
-                            <FaFire className="inline mr-1" style={{ fontSize: "0.6rem" }} />
-                          )}
+                          {task.priority === "high" && <FaFire className="inline mr-1" style={{ fontSize: "0.6rem" }} />}
                           {pc.label}
                         </span>
                       )}
@@ -461,8 +408,6 @@ export default function Tasks({ setAuth }) {
           )}
         </div>
       </div>
-
-      {/* Footer */}
     </div>
   );
 }
