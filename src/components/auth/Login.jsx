@@ -10,13 +10,9 @@ import { useState } from "react";
 function Field({ name, type, placeholder, icon, formik, toggleShow, showPassword }) {
   return (
     <div className="mb-4">
-      <label className="text-xs tracking-widest text-gray-500 block mb-1">
-        {name.toUpperCase()}
-      </label>
+      <label className="text-xs tracking-widest text-gray-500 block mb-1">{name.toUpperCase()}</label>
       <div className="flex items-center border-2 border-black bg-white focus-within:border-pink-400 transition-colors">
-        <span className="px-3 text-gray-400 text-xs border-r-2 border-black py-3">
-          {icon}
-        </span>
+        <span className="px-3 text-gray-400 text-xs border-r-2 border-black py-3">{icon}</span>
         <input
           name={name}
           type={type}
@@ -29,20 +25,12 @@ function Field({ name, type, placeholder, icon, formik, toggleShow, showPassword
         />
         {/* ✅ Eye toggle for password fields */}
         {toggleShow && (
-          <button
-            type="button"
-            onClick={toggleShow}
-            className="px-3 text-gray-400 hover:text-black transition border-l-2 border-black py-3"
-          >
+          <button type="button" onClick={toggleShow} className="px-3 text-gray-400 hover:text-black transition border-l-2 border-black py-3">
             {showPassword ? <FaEyeSlash className="text-xs" /> : <FaEye className="text-xs" />}
           </button>
         )}
       </div>
-      {formik.touched[name] && formik.errors[name] && (
-        <p className="text-red-500 text-xs mt-1 tracking-widest">
-          &gt; {formik.errors[name]}
-        </p>
-      )}
+      {formik.touched[name] && formik.errors[name] && <p className="text-red-500 text-xs mt-1 tracking-widest">&gt; {formik.errors[name]}</p>}
     </div>
   );
 }
@@ -58,16 +46,15 @@ export default function Login({ setAuth }) {
       email: Yup.string().email("INVALID EMAIL").required("REQUIRED"),
       password: Yup.string().min(6, "MIN 6 CHARS").required("REQUIRED"),
     }),
+    
     onSubmit: async (values) => {
       try {
-        const response = await axios.get("http://localhost:3001/users");
-        const user = response.data.find(
-          (u) => u.email === values.email && u.password === values.password
-        );
+        const baseURL = import.meta.env.VITE_API_URL || "http://localhost:3001";
+        const response = await axios.get(`${baseURL}/users`);
+        const user = response.data.find((u) => u.email === values.email && u.password === values.password);
         if (user) {
           localStorage.setItem("user", JSON.stringify(user));
           localStorage.setItem("auth", "true");
-          // ✅ Remember me
           if (remember) {
             localStorage.setItem("remembered_email", values.email);
           } else {
@@ -106,30 +93,15 @@ export default function Login({ setAuth }) {
 
   return (
     <AuthLayout title="LOGIN">
-      <Motion.div
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
-      >
+      <Motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
         {/* Security badge */}
-        <div
-          className="flex items-center gap-2 border-2 border-black px-3 py-2 mb-5"
-          style={{ background: "#f0fdf4" }}
-        >
+        <div className="flex items-center gap-2 border-2 border-black px-3 py-2 mb-5" style={{ background: "#f0fdf4" }}>
           <FaShieldAlt className="text-green-600 text-xs" />
-          <span className="text-xs tracking-widest text-green-700 font-bold">
-            SECURE_CONNECTION_ACTIVE
-          </span>
+          <span className="text-xs tracking-widest text-green-700 font-bold">SECURE_CONNECTION_ACTIVE</span>
           <span className="ml-auto w-2 h-2 bg-green-500 rounded-full animate-pulse" />
         </div>
 
-        <Field
-          name="email"
-          type="email"
-          placeholder="name@example.com"
-          icon={<FaAt />}
-          formik={formik}
-        />
+        <Field name="email" type="email" placeholder="name@example.com" icon={<FaAt />} formik={formik} />
 
         <Field
           name="password"
@@ -143,28 +115,15 @@ export default function Login({ setAuth }) {
 
         {/* ✅ Password strength bar */}
         {strength && (
-          <Motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="mb-4 -mt-2"
-          >
+          <Motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-4 -mt-2">
             <div className="flex justify-between mb-1">
               <span className="text-xs tracking-widest text-gray-400">PWD_STRENGTH</span>
-              <span
-                className="text-xs font-bold tracking-widest"
-                style={{ color: strength.color }}
-              >
+              <span className="text-xs font-bold tracking-widest" style={{ color: strength.color }}>
                 {strength.label}
               </span>
             </div>
             <div className="w-full h-1.5 border border-black" style={{ background: "#f0f0f0" }}>
-              <Motion.div
-                initial={{ width: 0 }}
-                animate={{ width: strength.width }}
-                transition={{ duration: 0.4 }}
-                className="h-full"
-                style={{ background: strength.color }}
-              />
+              <Motion.div initial={{ width: 0 }} animate={{ width: strength.width }} transition={{ duration: 0.4 }} className="h-full" style={{ background: strength.color }} />
             </div>
           </Motion.div>
         )}
