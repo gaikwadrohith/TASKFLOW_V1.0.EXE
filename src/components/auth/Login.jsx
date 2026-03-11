@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { motion as Motion } from "framer-motion";
 import AuthLayout from "./AuthLayout";
-import axios from "axios";
+import api from "../../services/api";
 import { FaAt, FaLock, FaArrowRight, FaEye, FaEyeSlash, FaShieldAlt } from "react-icons/fa";
 import { useState } from "react";
 
@@ -23,7 +23,6 @@ function Field({ name, type, placeholder, icon, formik, toggleShow, showPassword
           className="flex-1 px-3 py-3 outline-none text-sm bg-transparent"
           style={{ fontFamily: "var(--font)" }}
         />
-        {/* ✅ Eye toggle for password fields */}
         {toggleShow && (
           <button type="button" onClick={toggleShow} className="px-3 text-gray-400 hover:text-black transition border-l-2 border-black py-3">
             {showPassword ? <FaEyeSlash className="text-xs" /> : <FaEye className="text-xs" />}
@@ -46,11 +45,9 @@ export default function Login({ setAuth }) {
       email: Yup.string().email("INVALID EMAIL").required("REQUIRED"),
       password: Yup.string().min(6, "MIN 6 CHARS").required("REQUIRED"),
     }),
-    
     onSubmit: async (values) => {
       try {
-        const baseURL = import.meta.env.VITE_API_URL || "http://localhost:3001";
-        const response = await axios.get(`${baseURL}/users`);
+        const response = await api.get("/users");
         const user = response.data.find((u) => u.email === values.email && u.password === values.password);
         if (user) {
           localStorage.setItem("user", JSON.stringify(user));
@@ -71,7 +68,6 @@ export default function Login({ setAuth }) {
     },
   });
 
-  // ✅ Pre-fill remembered email
   useState(() => {
     const remembered = localStorage.getItem("remembered_email");
     if (remembered) {
@@ -80,7 +76,6 @@ export default function Login({ setAuth }) {
     }
   }, []);
 
-  // ✅ Password strength
   const getStrength = (pwd) => {
     if (!pwd) return null;
     if (pwd.length < 6) return { label: "WEAK", color: "#dc2626", width: "25%" };
@@ -94,7 +89,6 @@ export default function Login({ setAuth }) {
   return (
     <AuthLayout title="LOGIN">
       <Motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-        {/* Security badge */}
         <div className="flex items-center gap-2 border-2 border-black px-3 py-2 mb-5" style={{ background: "#f0fdf4" }}>
           <FaShieldAlt className="text-green-600 text-xs" />
           <span className="text-xs tracking-widest text-green-700 font-bold">SECURE_CONNECTION_ACTIVE</span>
@@ -113,7 +107,6 @@ export default function Login({ setAuth }) {
           showPassword={showPassword}
         />
 
-        {/* ✅ Password strength bar */}
         {strength && (
           <Motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="mb-4 -mt-2">
             <div className="flex justify-between mb-1">
@@ -128,7 +121,6 @@ export default function Login({ setAuth }) {
           </Motion.div>
         )}
 
-        {/* ✅ Remember me */}
         <div className="flex items-center gap-2 mb-5">
           <button
             type="button"
@@ -141,7 +133,6 @@ export default function Login({ setAuth }) {
           <span className="text-xs tracking-widest text-gray-500">REMEMBER_THIS_DEVICE</span>
         </div>
 
-        {/* Submit */}
         <button
           type="button"
           onClick={formik.handleSubmit}
@@ -153,14 +144,12 @@ export default function Login({ setAuth }) {
           <FaArrowRight className="text-xs group-hover:translate-x-1 transition-transform" />
         </button>
 
-        {/* Divider */}
         <div className="flex items-center gap-3 my-4">
           <div className="flex-1 border-t border-black" />
           <span className="text-xs tracking-widest text-gray-400">OR_CONTINUE_WITH</span>
           <div className="flex-1 border-t border-black" />
         </div>
 
-        {/* ✅ Social login placeholders */}
         <div className="flex gap-2 mb-4">
           <button
             type="button"
